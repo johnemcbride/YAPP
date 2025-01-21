@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "YAPP"
+version = "0.1.0"
+description = "A reusable library for project management"
+authors = [
+    { name = "John McBride", email = "john.e.mcbride@icloud.com" }
+]
+readme = "README.md"
+keywords = ["project management", "library"]
+license = "MIT"
+
+# If your library depends on any external packages, list them here:
+dependencies = [
+    "pandas"
+]
+
+# Optional: If you have entry points (e.g., console_scripts), define them here:
+# [project.scripts]
+# my_lib_cmd = "my_lib.cli:main"
+
+[project.urls]
+"Homepage" = "https://github.com/johnemcbride/YAPP.git"
+"Bug Tracker" = "https://github.com/johnemcbride/YAPP/issues"
