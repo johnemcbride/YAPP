@@ -1,0 +1,12 @@
+Metadata-Version: 2.2
+Name: YAPP
+Version: 0.1.0
+Summary: A reusable library for project management
+Author-email: John McBride <john.e.mcbride@icloud.com>
+License: MIT
+Project-URL: Homepage, https://github.com/johnemcbride/YAPP.git
+Project-URL: Bug Tracker, https://github.com/johnemcbride/YAPP/issues
+Keywords: project management,library
+Description-Content-Type: text/markdown
+
+# Library for producing project status based on a hierarchy of tasks
