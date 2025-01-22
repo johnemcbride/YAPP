@@ -1,6 +1,0 @@
-README.md
-pyproject.toml
-YAPP.egg-info/PKG-INFO
-YAPP.egg-info/SOURCES.txt
-YAPP.egg-info/dependency_links.txt
-YAPP.egg-info/top_level.txt

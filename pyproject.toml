@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "YAPP"
+name = "yapp"
 version = "0.1.0"
 description = "A reusable library for project management"
 authors = [
@@ -15,7 +15,12 @@ keywords = ["project management", "library"]
 license = { text = "MIT" }
 
 # If your library depends on any external packages, list them here:
-
+dependencies = [
+    "pandas",
+    "openpyxl",
+    "python-pptx"
+    
+]
 
 # Optional: If you have entry points (e.g., console_scripts), define them here:
 # [project.scripts]
@@ -28,4 +33,5 @@ license = { text = "MIT" }
 
 
 [tool.setuptools.packages.find]
-include = ["YAPP"]
+where = ["src"]
+include = ["yapp"]
