@@ -27,6 +27,16 @@ class StatusLevel:
                 self.statusObj, self.level_num + 1, index))
         return children
 
+    def __str__(self):
+        string_out = self.get_description() + '\n'
+        string_out = string_out + 'Hierarchy level:' + \
+            str(self.level_num) + '\n'
+        df = self.statusObj.aggregates[f"Level_{self.level_num}_Aggregation"]
+
+        return string_out + str(df[[
+            'planned_value', 'earned_value', 'ev_over_pv',
+            'status']].iloc[self.index_num])
+
 
 def make_getter(field_name):
     def getter(self):
@@ -43,7 +53,7 @@ def make_formatted_getter(field_name):
     def getter(self):
         df = self.statusObj.aggregates[f"Level_{self.level_num}_Aggregation"]
         val = df[field_name].iloc[self.index_num]
-        # format if date
+        # format if datef
         if pd.notna(val) and hasattr(val, "strftime"):
             return val.strftime("%d/%m/%Y")
         if pd.isna(val):

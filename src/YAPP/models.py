@@ -17,7 +17,7 @@ class ComputeStatus:
     date_columns = ["Baseline Start", "Baseline Finish",
                     "Actual Start", "Actual Finish", "Expected Finish"]
 
-    def __init__(self, source_dataframe, status_date, project_name="MyProject"):
+    def __init__(self, source_dataframe, status_date, project_name="Core Commercial Transformation"):
         self.source_data_frame = source_dataframe
         self.status_date = status_date
         self.project_name = project_name
@@ -26,6 +26,7 @@ class ComputeStatus:
         self.add_level_0_summary_column(self.project_name)
         self.add_calculated_fields()
         self.compute_aggregates()
+        print(self.aggregates["Level_5_Aggregation"]['actual_finish'])
 
     def add_level_0_summary_column(self, project_name):
         """
@@ -98,37 +99,40 @@ class ComputeStatus:
 
         aggregation["actual_finish"] = np.where(
             aggregation["actual_percent_complete"] == 1,
-            aggregation["actual_finish"],
+            aggregation["actual_finish"].dt.date,
             pd.NaT
         )
 
         def determine_status(row):
             if pd.isna(row["baseline_start"]) or pd.isna(row["baseline_finish"]):
                 return "Unplanned"
-            if pd.notna(row["actual_finish"]):
+            if pd.notna(row["actual_percent_complete"]) and row["actual_percent_complete"] == 1:
                 return "Complete"
             if row["baseline_start"] <= status_datetime and pd.isna(row["actual_start"]):
                 return "Late Starting"
             if row["baseline_start"] > status_datetime and pd.isna(row["actual_start"]):
                 return "Not Due To Start"
-            if row["ev_over_pv"] >= 0.8:
+
+            # Handle edge case: If planned_value is 0 but earned_value > 0, it should be "In Progress"
+            if row["planned_value"] == 0 and row["earned_value"] > 0:
                 return "In Progress"
-            elif 0.3 <= row["ev_over_pv"] < 0.8:
-                return "Delayed"
-            else:
-                return "Severely Delayed"
+
+            # Normal ev_over_pv logic
+            if pd.notna(row["actual_start"]):  # Task has started
+                if row["ev_over_pv"] >= 0.8:
+                    return "In Progress"
+                elif 0.3 <= row["ev_over_pv"] < 0.8:
+                    return "Delayed"
+                else:
+                    return "Severely Delayed"
+
+            return "Severely Delayed"  # Default fallback
 
         aggregation["status"] = aggregation.apply(determine_status, axis=1)
         return aggregation
 
     def cleanse_input_data(self):
         def date_columns_to_datetime(df, date_columns):
-            df = df.copy()
-            for col in date_columns:
-                df[col] = pd.to_datetime(df[col], errors="coerce")
-            return df
-
-        def rename_columns(df, date_columns):
             df = df.copy()
             for col in date_columns:
                 df[col] = pd.to_datetime(df[col], errors="coerce")
